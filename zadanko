@@ -30,20 +30,25 @@ def gra():
         return suma
 
     while True:
-        print("\n===== MENU =====")
-        print("1. Pokaz przedmioty")
+
+        # STALE WIDOCZNE INFORMACJE
+        print("\n" + "=" * 35)
+        print("          TWOJA POSTAC")
+        print("=" * 35)
+        print(f"💰 ZLOTO: {ekwipunek['zloto']}")
+        print(f"🎒 WAGA: {oblicz_wage():.2f} / {max_waga} kg")
+        print("=" * 35)
+
+        print("\n1. Pokaz przedmioty")
         print("2. Kup przedmiot")
         print("3. Uzyj przedmiotu")
         print("4. Sprawdz przedmiot")
         print("5. Wyjdz")
 
-        print(f"\nZloto: {ekwipunek['zloto']}")
-        print(f"Waga: {oblicz_wage():.2f}/{max_waga} kg")
-
         wybor = input("\nWybierz opcje: ")
 
         if wybor == "1":
-            print("\n===== EKWIPUNEK =====")
+            print("\n--- EKWIPUNEK ---")
 
             for nazwa, ilosc in ekwipunek.items():
                 print(
@@ -51,31 +56,24 @@ def gra():
                     f"(waga: {wagi[nazwa] * ilosc:.2f} kg)"
                 )
 
-            print(f"\nZloto: {ekwipunek['zloto']}")
-            print(f"Laczna waga: {oblicz_wage():.2f} kg")
+            input("\nNacisnij ENTER, aby wrocic do menu...")
 
         elif wybor == "2":
-            print("\n===== SKLEP =====")
+            print("\n--- SKLEP ---")
 
             for nazwa, cena in ceny.items():
-                print(
-                    f"{nazwa}: {cena} zlota "
-                    f"| Waga: {wagi[nazwa]} kg"
-                )
+                print(f"{nazwa}: {cena} zl | {wagi[nazwa]} kg")
 
             przedmiot = input("\nCo chcesz kupic? ").lower()
 
             if przedmiot in ceny:
                 cena = ceny[przedmiot]
-                nowa_waga = oblicz_wage() + wagi[przedmiot]
 
                 if ekwipunek["zloto"] < cena:
                     print("Nie masz wystarczajaco zlota!")
 
-                elif nowa_waga > max_waga:
-                    print("Nie masz miejsca w ekwipunku!")
-                    print(f"Twoja waga: {oblicz_wage():.2f} kg")
-                    print(f"Limit: {max_waga} kg")
+                elif oblicz_wage() + wagi[przedmiot] > max_waga:
+                    print("Przekroczysz limit 30 kg!")
 
                 else:
                     ekwipunek["zloto"] -= cena
@@ -85,47 +83,53 @@ def gra():
                     else:
                         ekwipunek[przedmiot] = 1
 
-                    print(f"Kupiono {przedmiot} za {cena} zlota.")
-                    print(f"Nowa waga: {oblicz_wage():.2f}/{max_waga} kg")
+                    print(f"Kupiono: {przedmiot}")
+                    print(f"Pozostalo zlota: {ekwipunek['zloto']}")
 
             else:
-                print("Nie ma takiego przedmiotu w sklepie.")
+                print("Nie ma takiego przedmiotu!")
+
+            input("\nNacisnij ENTER, aby wrocic do menu...")
 
         elif wybor == "3":
-            przedmiot = input(
-                "Jaki przedmiot chcesz uzyc/usunac? "
-            ).lower()
+            przedmiot = input("\nCo chcesz uzyc? ").lower()
 
             if przedmiot in ekwipunek and przedmiot != "zloto":
                 ekwipunek[przedmiot] -= 1
 
-                if ekwipunek[przedmiot] <= 0:
+                if ekwipunek[przedmiot] == 0:
                     del ekwipunek[przedmiot]
 
-                print("Uzyto przedmiotu.")
-                print(f"Nowa waga: {oblicz_wage():.2f} kg")
+                print("Uzyto przedmiotu!")
 
             else:
-                print("Nie masz takiego przedmiotu.")
+                print("Nie masz takiego przedmiotu!")
+
+            input("\nNacisnij ENTER, aby wrocic do menu...")
 
         elif wybor == "4":
-            przedmiot = input("Co sprawdzic? ").lower()
+            przedmiot = input("\nCo sprawdzic? ").lower()
 
             if przedmiot in ekwipunek:
-                ilosc = ekwipunek[przedmiot]
-                print(f"Przedmiot: {przedmiot}")
-                print(f"Ilosc: {ilosc}")
-                print(f"Waga laczna: {wagi[przedmiot] * ilosc:.2f} kg")
-
+                print(f"\nPrzedmiot: {przedmiot}")
+                print(f"Ilosc: {ekwipunek[przedmiot]}")
+                print(
+                    f"Waga: "
+                    f"{wagi[przedmiot] * ekwipunek[przedmiot]:.2f} kg"
+                )
             else:
-                print("Nie ma tego w ekwipunku.")
+                print("Nie masz tego przedmiotu!")
+
+            input("\nNacisnij ENTER, aby wrocic do menu...")
 
         elif wybor == "5":
-            print("Koniec.")
+            print("\nKoniec gry!")
             break
 
         else:
-            print("Zly wybor, wpisz cyfre od 1 do 5.")
+            print("Nieprawidlowy wybor!")
+
+            input("\nNacisnij ENTER, aby wrocic do menu...")
 
 
 gra()
